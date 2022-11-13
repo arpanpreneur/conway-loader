@@ -1,0 +1,45 @@
+{
+  "name": "conway-loader",
+  "version": "0.1.0",
+  "description": "A package to spice up your loaders using Conway's Game of Life",
+  "browser": "index.js",
+  "keywords": ["conway", "loaders", "spinner", "game", "gol", "cgol", "game of life", "loading", "animation", "loader widget"],
+  "author": "Arpan Mukherjee",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server --config webpack.config.js --mode development --open",
+    "build": "webpack --config webpack.config.js --mode production",
+    "preview": "npm run build && http-server dist -o"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^5.0.0",
+    "eslint": "^7.12.0",
+    "file-loader": "^6.1.1",
+    "html-webpack-plugin": "^4.5.0",
+    "http-server": "^0.12.3",
+    "loader-utils": "^2.0.0",
+    "mini-css-extract-plugin": "^1.2.0",
+    "node-sass": "^7.0.3",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "sass-loader": "^10.0.4",
+    "style-loader": "^2.0.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "url-loader": "^4.1.1",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0"
+  },
+  "standard": {
+    "env": [
+      "node",
+      "es6"
+    ]
+  },
+  "dependencies": {
+    "uuid": "^3.4.0"
+  }
+}
