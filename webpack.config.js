@@ -145,7 +145,9 @@ module.exports = (env, argv) => {
     // Production settings
     Object.assign(config, {
       output: {
-        path: path.resolve(__dirname, 'docs'),
+        library: "conway-loader",
+        libraryTarget: "commonjs-module",
+        path: path.resolve(__dirname, 'dist'),
         filename: 'js/[name].js'
       },
       devtool: 'source-map',
@@ -165,7 +167,8 @@ module.exports = (env, argv) => {
           new OptimizeCssAssetsPlugin(),
         ]
       }
-    });
+    },
+    );
   }
 
   return config;

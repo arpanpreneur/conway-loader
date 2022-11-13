@@ -174,3 +174,6 @@ function delay(ms) {
 // window.loader.render();
 // window.loader.start();
 
+export default {
+  createLoader, presets
+}

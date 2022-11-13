@@ -2,7 +2,7 @@
   "name": "conway-loader",
   "version": "0.1.0",
   "description": "A package to spice up your loaders using Conway's Game of Life",
-  "browser": "index.js",
+  "browser": "dist/js/main.js",
   "keywords": ["conway", "loaders", "spinner", "game", "gol", "cgol", "game of life", "loading", "animation", "loader widget"],
   "author": "Arpan Mukherjee",
   "license": "MIT",
