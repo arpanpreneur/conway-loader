@@ -8,6 +8,13 @@ This is a project that helps you spice up your loaders using the famous Game of 
 
 `npm install conway-loader`
 
+### Build Loaders using our Conway Loader Builder
+
+
+![](assets/20221115_055235_builder_screenshot.jpeg)
+
+Access it here: [https://ArpanKIIT2017.github.io/conway-loader-builder](https://)
+
 #### Use it
 
 ```
@@ -27,14 +34,25 @@ window.loader = conwayLoader.createLoader({
     size: 50,
     animationDelay: 500,
     randomColor: true,
-    initialBoard: conwayLoader.presets.blink()
+    initialBoard: conwayLoader.presets.blink(),
+    loopPattern: false, // If your pattern is oscillatory by default
  });
  
  window.loader.render();
  window.loader.start();
 ```
 
-You can have precise control over the resolution by using the height, width, cellSize paramaters instead of the size paramater. However presets are / will be designed to work with resolution of 10x10 matrices only. Please note that making high resolution loaders may result in high CPU load as the Game of Life computation is CPU-intensive in the order of O(n^m), where n is the number of rows and m is the number of columns in the grid.
+#### Following are the Presets (Raise PR to add more)
+
+* beauty
+* blink
+* blinkyFace
+* quadpole
+* styleSpin
+
+These presets are basically starting states of the GoL algorithm. These are specifically chosen because of their oscillatory behaviour (turing machine never halts), looks good for loader purposes.
+
+You can have precise control over the resolution by using the height, width, cellSizeR, cellSizeC paramaters. If you provide a initialBoard (presets are matrices passed to this) then you don't need to specify cellSizeR and cellSizeC, it will be autocalculated. Please note that making high resolution loaders may result in high CPU load as the Game of Life computation is CPU-intensive in the order of O(n^m), where n is the number of rows and m is the number of columns in the grid.
 
 #### How to stop / suspend the loader
 

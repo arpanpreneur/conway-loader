@@ -1,26 +1,40 @@
 export default class ConwayGame {
-    constructor(maxRows, maxCols, initialBoard, painterCb) {
+    constructor(maxRows, maxCols, initialBoard, loopPattern, painterCb) {
         this.maxRows = maxRows;
         this.maxCols = maxCols;
 
         this.painterCb = painterCb;
         this.initialBoard = initialBoard;
+        this.loopPattern = loopPattern;
+
+        this.isAllDead = false;
+        this.isInitialBoardDead = true;
+
         if (initialBoard && !(maxRows === initialBoard.length && maxCols === initialBoard[0].length)) {
+            console.error("Initial Board Given Is = ", initialBoard);
+            console.error("maxRows = ", maxRows);
+            console.error("maxCols = ", maxCols);
             throw "Invalid Initial Board State";
         }
     }
 
     init() {
         if (this.initialBoard) {
-            this.mainBoard = this.initialBoard;
-            for (let row = 0; row < this.maxRows; row++) {
-                for (let col = 0; col < this.maxCols; col++) {
-                    this.painterCb(row, col, this.initialBoard[row][col]);
-                }
-            }    
+            this.mainBoard = structuredClone(this.initialBoard);
         } else {
             this.mainBoard = this._makeInitialBoard();
         }
+
+        for (let row = 0; row < this.maxRows; row++) {
+            for (let col = 0; col < this.maxCols; col++) {
+                this.painterCb(row, col, this.mainBoard[row][col]);
+                
+                if (this.mainBoard[row][col] !== 0) {
+                    this.isInitialBoardDead = false;
+                }
+            }
+        }
+        this.startingBoard = structuredClone(this.mainBoard);
     }
 
     _makeInitialBoard() {
@@ -39,7 +53,13 @@ export default class ConwayGame {
     }
 
     _getNextGeneration() {
-        const nextGen = structuredClone(this.mainBoard);
+        let nextGen;
+        if (this.isAllDead && this.loopPattern) {
+            nextGen = structuredClone(this.startingBoard);
+            this.isAllDead = false;
+            return nextGen;
+        }
+        nextGen = structuredClone(this.mainBoard);
 
         const getCell = (row, col) => {
             if (row < 0 || row >= this.maxRows || col < 0 || col >= this.maxCols) {
@@ -53,7 +73,8 @@ export default class ConwayGame {
                 +  getCell(row, col-1)   +                       getCell(row, col+1)
                 +  getCell(row+1, col-1) + getCell(row+1, col) + getCell(row+1, col+1);
         }
-
+        
+        let checkDead = true;
         for (let row = 0; row < this.maxRows; row++) {
             for (let col = 0; col < this.maxCols; col++) {
                 const liveNeighbourCount = getLiveNeighbourCount(row, col);
@@ -68,13 +89,16 @@ export default class ConwayGame {
                 }
 
                 this.painterCb(row, col, nextGen[row][col]);
+                if (nextGen[row][col] !== 0) checkDead = false;
             }
         }
 
+        this.isAllDead = checkDead;
         return nextGen;
     }
 
     next() {
+        if (this.initialBoard && this.isInitialBoardDead) return;
         this.mainBoard = this._getNextGeneration();
     }
 

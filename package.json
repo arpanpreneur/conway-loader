@@ -1,6 +1,6 @@
 {
   "name": "conway-loader",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A package to spice up your loaders using Conway's Game of Life",
   "browser": "dist/js/main.js",
   "keywords": ["conway", "loaders", "spinner", "game", "gol", "cgol", "game of life", "loading", "animation", "loader widget"],

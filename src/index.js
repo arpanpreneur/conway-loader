@@ -11,43 +11,54 @@ const DEFAULT_DEAD_COLOR = "#ffffff";
 const DEFAULT_ANIMATION_DELAY = 0.5; // millis
 
 function createLoader({
-  size,
   height,
   width,
-  cellSize,
+  cellSizeR,
+  cellSizeC,
   initialBoard,
   aliveColor,
   deadColor,
   randomColor,
   animationDelay,
   rootNode,
+  fixCellSizes,
+  debug,
+  loopPattern
 }) {
   height = height ?? DEFAULT_LOADER_HEIGHT;
   width = width ?? DEFAULT_LOADER_WIDTH;
-  cellSize = cellSize ?? DEFAULT_CELL_SIZE;
+  cellSizeR = cellSizeR ?? DEFAULT_CELL_SIZE;
+  cellSizeC = cellSizeC ?? DEFAULT_CELL_SIZE;
   aliveColor = aliveColor ?? DEFAULT_ALIVE_COLOR;
   deadColor = deadColor ?? DEFAULT_DEAD_COLOR;
   animationDelay = animationDelay ?? DEFAULT_ANIMATION_DELAY;
+  fixCellSizes = fixCellSizes ?? false;
+  loopPattern = loopPattern ?? true;
 
   if (randomColor) {
     deadColor = DEFAULT_DEAD_COLOR;
   }
 
-  if (size) {
-    height = size;
-    width = size;
-    cellSize = size / 10;
+  const maxRows = initialBoard ? initialBoard.length : 10;
+  const maxCols = initialBoard && initialBoard.length > 0 ? initialBoard[0].length : 10;
+
+  if (!fixCellSizes) {
+    cellSizeR = maxRows > 0 ? (height / maxRows) : (height / 10);
+    cellSizeC = maxCols > 0 ? (width / maxCols) : (width / 10);
   }
 
-  const maxRows = height / cellSize;
-  const maxCols = width / cellSize;
 
   const loaderPrefix = uuidv4();
 
-  const svgGrid = makeSvgGrid(height, width, cellSize, loaderPrefix, deadColor);
-  const conwayGame = new ConwayGame(maxRows, maxCols, initialBoard, (row, col, val) => {
+  const svgGrid = makeSvgGrid(height, width, maxRows, maxCols, cellSizeR, cellSizeC, loaderPrefix, deadColor);
+  const conwayGame = new ConwayGame(maxRows, maxCols, initialBoard, loopPattern, (row, col, val) => {
     paintCell(row, col, val, aliveColor, deadColor, randomColor, loaderPrefix);
   });
+
+  if (debug) {
+    console.log(conwayGame);
+    console.log(svgGrid);
+  }
 
   return {
     svgGrid,
@@ -134,7 +145,7 @@ function paintGrid(loaderPrefix, conwayGame, maxRows, maxCols, aliveColor, deadC
   }
 }
 
-function makeSvgGrid(height, width, cellSize, loaderPrefix, deadColor) {
+function makeSvgGrid(height, width, maxRows, maxCols, cellSizeR, cellSizeC, loaderPrefix, deadColor) {
   //const svgNode = document.createElement("svg");
   const svgNode = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svgNode.setAttribute("height", height);
@@ -142,16 +153,14 @@ function makeSvgGrid(height, width, cellSize, loaderPrefix, deadColor) {
   svgNode.setAttribute("viewBox", `0 0 ${height} ${width}`);
   //svgNode.setAttribute("id", loaderPrefix);
 
-  const maxRows = height / cellSize;
-  const maxCols = width / cellSize;
 
   let gridHtmlString = `<defs id="${loaderPrefix}"></defs>`;
   for (let row = 0; row < maxRows; row++) {
     for (let col = 0; col < maxCols; col++) {
       gridHtmlString += `<rect id="${loaderPrefix}-${row}-${col}" 
-                    x="${col * cellSize}" y="${row * cellSize}"
-                    width="${cellSize}" height="${cellSize}"
-                    fill="${deadColor}"
+                    x="${col * cellSizeC}" y="${row * cellSizeR}"
+                    width="${cellSizeC}" height="${cellSizeR}"
+                    fill="${deadColor}" stroke=${deadColor}
                  ></rect>`;
     }
   }
